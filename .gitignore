@@ -58,4 +58,7 @@ out/
 .DS_Store
 Thumbs.db
 
-*.md
+# Docs  
+README.md
+RUNNING.md
+DEPLOYMENT.md
