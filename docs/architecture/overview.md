@@ -195,4 +195,5 @@ sequenceDiagram
 - **[Data Flow](data-flow.md)** - Complete data flow diagrams
 - **[Database Schema](database-schema.md)** - Entity relationships
 - **[Vector Store](vector-store.md)** - Embedding architecture
+- **[Authentication](authentication.md)** - Login & Security Architecture
 

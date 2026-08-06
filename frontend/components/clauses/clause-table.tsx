@@ -249,10 +249,10 @@ export function ClauseTable({ documentId }: ClauseTableProps) {
       </div>
 
       {/* Table and Explanation Panel */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_400px] gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,_1fr)_400px] gap-4">
         {/* Table */}
-        <div className="rounded-lg border">
-          <ScrollArea className="h-[600px]">
+        <div className="rounded-lg border min-w-0">
+          <ScrollArea className="h-[600px] w-full">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -284,16 +284,16 @@ export function ClauseTable({ documentId }: ClauseTableProps) {
                         )}
                       </div>
                     </TableCell>
-                    <TableCell className="max-w-md">
+                    <TableCell className="max-w-md whitespace-normal">
                       <p className="text-sm line-clamp-3">
                         {clause.extracted_text}
                       </p>
                     </TableCell>
                     <TableCell>{clause.page_number}</TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
+                    <TableCell className="text-xs text-muted-foreground whitespace-normal">
                       {clause.section}
                     </TableCell>
-                    <TableCell>
+                    <TableCell className="whitespace-normal">
                       <RiskBadge
                         riskScore={clause.risk_score}
                         riskFlags={clause.risk_flags}
