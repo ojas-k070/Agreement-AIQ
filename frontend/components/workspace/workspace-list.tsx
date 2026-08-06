@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
-import { 
-  FolderOpen, 
-  FileText, 
-  MessageSquare, 
-  Trash2, 
+import {
+  FolderOpen,
+  FileText,
+  MessageSquare,
+  Trash2,
   Loader2,
   Plus,
   Calendar,
@@ -48,6 +48,10 @@ interface WorkspaceWithStats extends Workspace {
   documentCount?: number;
   conversationCount?: number;
 }
+function parseWorkspaceTimestamp(timestamp: string): Date {
+  const hasTimezone = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(timestamp);
+  return new Date(hasTimezone ? timestamp : `${timestamp}Z`);
+}
 
 export function WorkspaceList({ onWorkspaceSelect }: WorkspaceListProps) {
   const [workspaces, setWorkspaces] = useState<WorkspaceWithStats[]>([]);
@@ -76,7 +80,7 @@ export function WorkspaceList({ onWorkspaceSelect }: WorkspaceListProps) {
     try {
       setLoading(true);
       const workspacesData = await api.getWorkspaces();
-      
+
       // Fetch stats for each workspace
       const workspacesWithStats = await Promise.all(
         workspacesData.map(async (workspace) => {
@@ -97,7 +101,7 @@ export function WorkspaceList({ onWorkspaceSelect }: WorkspaceListProps) {
           }
         })
       );
-      
+
       setWorkspaces(workspacesWithStats);
     } catch (error: any) {
       toast.error("Failed to load workspaces", {
@@ -191,7 +195,7 @@ export function WorkspaceList({ onWorkspaceSelect }: WorkspaceListProps) {
             Organize your contracts by project, client, or category
           </p>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center w-full md:w-auto">
           <div className="relative flex-1 sm:w-64">
             <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -210,54 +214,54 @@ export function WorkspaceList({ onWorkspaceSelect }: WorkspaceListProps) {
                 New Workspace
               </Button>
             </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create New Workspace</DialogTitle>
-              <DialogDescription>
-                Create a workspace to organize your contracts and documents.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="space-y-4 py-4">
-              <div className="space-y-2">
-                <Label htmlFor="name">Name *</Label>
-                <Input
-                  id="name"
-                  value={formData.name}
-                  onChange={(e) =>
-                    setFormData((prev) => ({ ...prev, name: e.target.value }))
-                  }
-                  placeholder="My Workspace"
-                />
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle>Create New Workspace</DialogTitle>
+                <DialogDescription>
+                  Create a workspace to organize your contracts and documents.
+                </DialogDescription>
+              </DialogHeader>
+              <div className="space-y-4 py-4">
+                <div className="space-y-2">
+                  <Label htmlFor="name">Name *</Label>
+                  <Input
+                    id="name"
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData((prev) => ({ ...prev, name: e.target.value }))
+                    }
+                    placeholder="My Workspace"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                    placeholder="Optional description"
+                    rows={3}
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="description">Description</Label>
-                <Textarea
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      description: e.target.value,
-                    }))
-                  }
-                  placeholder="Optional description"
-                  rows={3}
-                />
-              </div>
-            </div>
-            <DialogFooter>
-              <Button variant="outline" onClick={() => setCreateOpen(false)}>
-                Cancel
-              </Button>
-              <Button onClick={handleCreate} disabled={creating}>
-                {creating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                Create
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setCreateOpen(false)}>
+                  Cancel
+                </Button>
+                <Button onClick={handleCreate} disabled={creating}>
+                  {creating && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                  Create
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </div>
       </div>
-    </div>
 
       {workspaces.length === 0 ? (
         <Card>
@@ -367,7 +371,7 @@ export function WorkspaceList({ onWorkspaceSelect }: WorkspaceListProps) {
                   <div className="flex items-center gap-2 text-xs text-muted-foreground pt-2 border-t">
                     <Calendar className="h-3 w-3" />
                     <span>
-                      Created {formatDistanceToNow(new Date(workspace.created_at), { addSuffix: true })}
+                      Created {formatDistanceToNow(parseWorkspaceTimestamp(workspace.created_at), { addSuffix: true })}
                     </span>
                   </div>
                 </div>
